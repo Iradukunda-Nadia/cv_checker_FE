@@ -1,10 +1,11 @@
 # cv_checker
 
-A new Flutter project.
+Front-end implementation of the cv Checker app.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This is a basic app that Matches Job recruiters to Job seekers based on skills, experience and 
+educalion level. It is primarily developed for the web.
 
 A few resources to get you started if this is your first Flutter project:
 
@@ -14,3 +15,5 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
