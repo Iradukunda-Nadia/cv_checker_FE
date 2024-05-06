@@ -1,19 +1,38 @@
 import 'package:cv_checker/AppUtils/appColors.dart';
+import 'package:cv_checker/AppUtils/lists.dart';
 import 'package:flutter/material.dart';
+
+import '../Services/commonService.dart';
 
 
 class CandidateCard extends StatefulWidget {
   final String id;
-  final String name;
-  final String email;
-  final String image;
+  final String jobSeekerName;
+  final String? email;
+  final String? image;
+  final String? createdDate;
+  final String? modifiedDate;
+  final int jobSector;
+  final String jobSectorLabel;
+  final int educationLevel;
+  final String educationLevelLabel;
+  final int experienceLevel;
+  final String experienceLevelLabel;
   final Map item;
   const CandidateCard({Key? key,
     required this.id,
-    required this.name,
-    required this.email,
-    required this.image,
+    required this.jobSeekerName,
+    this.email,
+    this.image,
     required this.item,
+    required this.createdDate,
+    this.modifiedDate,
+    required this.jobSector,
+    required this.jobSectorLabel,
+    required this.educationLevel,
+    required this.educationLevelLabel,
+    required this.experienceLevel,
+    required this.experienceLevelLabel,
   }) : super(key: key);
 
   @override
@@ -21,8 +40,12 @@ class CandidateCard extends StatefulWidget {
 }
 
 class _CandidateCardState extends State<CandidateCard> {
+
+  List images = Lists.randomImages;
   @override
   Widget build(BuildContext context) {
+    images.shuffle();
+    var imagePath = images[0];
     return Card(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -40,10 +63,7 @@ class _CandidateCardState extends State<CandidateCard> {
                   aspectRatio: 1 / 1,
                   child: ClipRRect(
                     borderRadius:BorderRadius.circular(40),
-                    child: Image.network(
-                      widget.image,
-                      fit: BoxFit.cover,
-                    ),
+                    child: Image.asset(imagePath)
                   ),
                 ),
               ),
@@ -59,23 +79,19 @@ class _CandidateCardState extends State<CandidateCard> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text(widget.name, style: Theme.of(context).textTheme
+                      child: Text(widget.jobSeekerName, style: Theme.of(context).textTheme
                           .bodyMedium),
                     ),
-                    Text(widget.item["jobInterest"], style: Theme.of(context).textTheme
+                    Text(widget.jobSectorLabel, style: Theme.of(context).textTheme
                         .labelSmall),
-                    Text(widget.item["Education"][0]["courseTitle"], style: Theme.of(context)
+                    Text(widget.educationLevelLabel, style: Theme.of(context)
                         .textTheme
                         .labelSmall),
-                    Text("Years of Experience: " + widget.item["yrs"], style:
+                    Text(widget.experienceLevelLabel, style:
                     Theme.of(context)
                         .textTheme
                         .labelSmall),
                     const SizedBox(height: 8,),
-                    Text("Skills: ${widget.item["skills"]}", style:
-                    Theme.of(context)
-                        .textTheme
-                        .bodySmall),
                   ],
                 ),
               )
@@ -90,7 +106,8 @@ class _CandidateCardState extends State<CandidateCard> {
                   color: AppColors.primaryColor.withOpacity(0.7),
                 ),
                 child: Center(
-                  child: Text(widget.item["experience"], style: TextStyle(
+                  child: Text(CommonService().experienceString
+                    (widget.experienceLevel), style: TextStyle(
                     color: Colors.white, fontSize: 10,
                   )),
                 )

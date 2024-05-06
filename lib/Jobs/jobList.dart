@@ -6,18 +6,19 @@ import 'package:flutter/material.dart';
 class ItemListing extends StatelessWidget {
   ItemListing({
     required this.itemSelectedCallback,
+    required this.jobs,
     this.selectedItem,
   });
 
   final ValueChanged<Job> itemSelectedCallback;
-  final Job? selectedItem; // Also new.
+  final Job? selectedItem;// Also new.
+  final List<Job> jobs;
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       shrinkWrap: true,
-      children: List<Job>.from(Lists.jobs.map((results) => Job.fromJson(results))
-          .toList()).map((item) {
+      children: jobs.map((item) {
         return Card(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -33,7 +34,7 @@ class ItemListing extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(item.company??'',
+                  Text(item.recruiterName??'',
                       style: Theme.of(context)
                           .textTheme.labelSmall!
                           .apply(

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 class AppColors {
   static Color primaryColor = const Color(0xffFF5454);
   static Color primaryLighten = const Color(0xffFF5454).withOpacity(0.5);
-  static Color primaryDarken = const Color(0xff115362,);
+  static Color primaryDarken = Colors.red;
   static Color accentColor = const Color(0xff7686cf,);
   static Color accent2Color = const Color(0xff7dcf76,);
   static Color disabledColor = const Color(0xffd2d2d2,);

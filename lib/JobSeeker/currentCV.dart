@@ -13,6 +13,9 @@ class CurrentCV extends StatefulWidget {
 }
 
 class _CurrentCVState extends State<CurrentCV> {
+
+
+
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<UserProvider>(context, listen: false);
@@ -21,7 +24,7 @@ class _CurrentCVState extends State<CurrentCV> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 28.0),
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
             child: Text(
               'CurrentCV',
               textAlign: TextAlign.center,
@@ -47,7 +50,7 @@ class _CurrentCVState extends State<CurrentCV> {
                   width: 311,
                   height: 64,
                   child: Text(
-                    user.cv.name?? '',
+                    user.cv.jobSeekerName?? '',
                     style: GoogleFonts.getFont(
                       'Montserrat',
                       color: Colors.black,
@@ -61,7 +64,7 @@ class _CurrentCVState extends State<CurrentCV> {
                   width: 400,
                   height: 40,
                   child: Text(
-                    'Job Interest: ${user.cv.jobInterest?? ''}',
+                    'Job Interest: ${user.cv.jobSector?? ''}',
                     style: GoogleFonts.getFont(
                       'Montserrat',
                       color: Colors.black,
@@ -113,73 +116,6 @@ class _CurrentCVState extends State<CurrentCV> {
                               height: 20,
                               child: Text(
                                 user.cv.email?? '',
-                                style: GoogleFonts.getFont(
-                                  'Montserrat',
-                                  color: Colors.black,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 429,
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 150,
-                              height: 15,
-                              child: Text(
-                                'phone number',
-                                style: GoogleFonts.getFont(
-                                  'Montserrat',
-                                  color: Colors.black,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 250,
-                              height: 20,
-                              child: Text(
-                                user.cv.phone?? '-',
-                                style: GoogleFonts.getFont(
-                                  'Montserrat',
-                                  color: Colors.black,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 429,
-                        height: 20,
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 150,
-                              height: 13.11,
-                              child: Text(
-                                'D.O.B',
-                                style: GoogleFonts.getFont(
-                                  'Montserrat',
-                                  color: Colors.black,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 250,
-                              height: 14.13,
-                              child: Text(
-                                user.cv.dob?? '-',
                                 style: GoogleFonts.getFont(
                                   'Montserrat',
                                   color: Colors.black,
@@ -250,7 +186,7 @@ class _CurrentCVState extends State<CurrentCV> {
                                       width: 250,
                                       height: 20,
                                       child: Text(
-                                        '${experience['role']} - '
+                                        '${experience['jobRole']} - '
                                             '${experience['company']}',
                                         style: GoogleFonts.getFont(
                                           'Montserrat',
@@ -357,8 +293,8 @@ class _CurrentCVState extends State<CurrentCV> {
                                       width: 250,
                                       height: 20,
                                       child: Text(
-                                        '${education['courseTitle']} ( '
-                                            '${education['level']})',
+                                        '${education['title']} ( '
+                                            '${education['qualification']})',
                                         style: GoogleFonts.getFont(
                                           'Montserrat',
                                           color: Colors.black,

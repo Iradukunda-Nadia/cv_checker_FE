@@ -1,43 +1,51 @@
 
 
+import 'package:cv_checker/Services/commonService.dart';
 import 'package:flutter/material.dart';
 
 class Job {
-  String? id;
+  String? jobId;
+  String? recruiterId;
   String? title;
-  String? experienceLevel;
+  String? experience;
   String? description;
-  String? company;
-  String? webLink;
+  String? recruiterName;
+  String? websiteURL;
   String? yrs;
   String? location;
-  List? skills;
+  List? specialSkill;
+  String? createdDate;
 
 
   Job({
-    this.id,
+    this.jobId,
+    this.recruiterId,
     this.title,
-    this.experienceLevel,
+    this.experience,
     this.description,
-    this.company,
-    this.webLink,
+    this.recruiterName,
+    this.websiteURL,
     this.yrs,
     this.location,
-    this.skills,
+    this.specialSkill,
+    this.createdDate
   });
 
 
   factory Job.fromJson(Map<String, dynamic> responseData) {
     return Job(
-      id: responseData['name'] ??'',
+      jobId: responseData['id'].toString() ??'',
+      recruiterId: responseData['recruiterId'].toString() ??'',
       title: responseData['title']??'',
-      experienceLevel: responseData['experienceLevel']??'',
+      experience: CommonService().experienceString
+        (responseData['experience']??0),
       description: responseData['description']??'',
-      company: responseData['company']??'',
-      webLink: responseData['webLink']??'',
+      recruiterName: responseData['recruiterName']??'',
+      websiteURL: responseData['websiteURL']??'',
       yrs: responseData['yrs']??'',
       location: responseData['location']??'',
-      skills: responseData['skills']??[],
+      specialSkill: (responseData['specialSkill'].split(","))??[],
+      createdDate: responseData['createdDate']??'',
 
     );
   }

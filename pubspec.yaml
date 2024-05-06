@@ -39,6 +39,8 @@ dependencies:
   google_fonts: 6.1.0
   page_transition: ^2.0.5
   provider: ^6.0.0
+  sentry_flutter: ^8.1.0
+  mockito: ^5.4.0
 
 dev_dependencies:
   flutter_test:
@@ -55,6 +57,7 @@ dependency_overrides:
   http: ^1.1.0
   cupertino_http: ^1.0.1
   intl: 0.17.0
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -76,6 +79,11 @@ flutter:
     - assets/images/chef.jpg
     - assets/images/jobs.png
     - assets/images/bgImage.jpg
+    - assets/images/avatar1.png
+    - assets/images/avatar2.png
+    - assets/images/avatar4.png
+    - assets/images/avatar5.png
+    - assets/images/avatar6.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

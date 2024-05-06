@@ -41,7 +41,7 @@ class ItemDetails extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.business_outlined, size: 20,),
             title: Text(
-              "Company: ${item!.company??[]}",
+              "Company: ${item!.recruiterName??[]}",
               style: Theme.of(context)
                   .textTheme.labelSmall!
                   .apply(
@@ -53,7 +53,7 @@ class ItemDetails extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.checklist, size: 20,),
             title: Text(
-              "Skills: ${item!.skills??[]}",
+              "Skills: ${item!.specialSkill??[]}",
               style: Theme.of(context)
                   .textTheme.labelSmall!
                   .apply(
@@ -125,7 +125,7 @@ class ItemDetails extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.business_outlined, size: 20,),
             title: Text(
-              "Company: ${item!.company??[]}",
+              "Company: ${item!.recruiterName??[]}",
               style: Theme.of(context)
                   .textTheme.labelSmall!
                   .apply(
@@ -137,7 +137,7 @@ class ItemDetails extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.checklist, size: 20,),
             title: Text(
-              "Skills: ${item!.skills??[]}",
+              "Skills: ${item!.specialSkill??[]}",
               style: Theme.of(context)
                   .textTheme.labelSmall!
                   .apply(

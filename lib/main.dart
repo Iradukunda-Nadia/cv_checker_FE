@@ -1,3 +1,4 @@
+import 'package:cv_checker/Authentication/LoginSignup.dart';
 import 'package:cv_checker/Authentication/signin.dart';
 import 'package:cv_checker/JobSeeker/cvForm.dart';
 import 'package:cv_checker/JobSeeker/jobseekerHome.dart';
@@ -9,9 +10,21 @@ import 'package:cv_checker/Recruiter/RHome.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async{
+  await SentryFlutter.init(
+        (options) {
+      options.dsn = 'https://45ce5bb6d891b20728939d69d820fafd@o584251.ingest.us.sentry.io/4507182375567360';
+      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+      // We recommend adjusting this value in production.
+      options.tracesSampleRate = 1.0;
+      // The sampling rate for profiling is relative to tracesSampleRate
+      // Setting to 1.0 will profile 100% of sampled transactions:
+      options.profilesSampleRate = 1.0;
+    },
+    appRunner: () => runApp(MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -36,7 +49,10 @@ class MyApp extends StatelessWidget {
           // or simply save your changes to "hot reload" in a Flutter IDE).
           // Notice that the counter didn't reset back to zero; the application
           // is not restarted.
-          primarySwatch: Colors.blue,
+          brightness: Brightness.light,
+          primaryColor: Colors.deepOrangeAccent,
+          colorScheme: ColorScheme.light(primary: const Color(0xFFed1e25)),
+          buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
           textTheme: TextTheme(
             //Body Small
             bodySmall:GoogleFonts.istokWeb(
@@ -59,7 +75,7 @@ class MyApp extends StatelessWidget {
                 fontSize: 38, color: Colors.black , fontWeight: FontWeight.bold),
           ),
         ),
-        home: const Signin(),
+        home: const LoginSignup(),
       ),
     );
   }

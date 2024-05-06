@@ -1,8 +1,12 @@
 import 'package:cv_checker/AppUtils/appColors.dart';
+import 'package:cv_checker/Authentication/LoginSignup.dart';
 import 'package:cv_checker/Authentication/signin.dart';
+import 'package:cv_checker/Providers/userProvider.dart';
+import 'package:cv_checker/Services/commonService.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 
 
 class NavBar extends StatefulWidget implements PreferredSizeWidget {
@@ -23,6 +27,8 @@ class _NavBarState extends State<NavBar> {
 
   @override
   Widget build(BuildContext context) {
+    var user = Provider.of<UserProvider>(context, listen: false);
+
     return AppBar(
       backgroundColor: Colors.white,
       automaticallyImplyLeading: false,
@@ -90,17 +96,26 @@ class _NavBarState extends State<NavBar> {
                       )).toList(),
                 )),
             Container(
-              width: 176,
+              width: 150,
               height: 100,
             ),
+
             PopupMenuButton(
               offset: Offset(12, 80),
               child: Container(
-                width: 176,
+                width: 400,
                 height: 53,
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Text("Logged in as: ${user.user.fullName!}",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500
+                      ),),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(5),
                       child: Container(
@@ -110,10 +125,7 @@ class _NavBarState extends State<NavBar> {
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                         ),
-                        child: Image.network(
-                          'https://picsum.photos/seed/536/600',
-                          fit: BoxFit.cover,
-                        ),
+                        child: const Icon(Icons.account_circle_sharp)
                       ),
                     ),
                     Icon(
@@ -129,13 +141,11 @@ class _NavBarState extends State<NavBar> {
                 PopupMenuItem<String>(
                   onTap: (){
                     print('logout');
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => Signin()),
-                            (Route<dynamic> route) => false);
+                    CommonService().logout(context);
                   },
                   value: "logout",
-                  child: const Row(
-                    children: [
+                  child: Row(
+                    children: const [
                       Icon(
                         Icons.logout,
                         color:Colors.black,
@@ -157,7 +167,7 @@ class _NavBarState extends State<NavBar> {
           ],
         ),
       ),
-      actions: [],
+      actions: const [],
       centerTitle: false,
       elevation: 0,
     );

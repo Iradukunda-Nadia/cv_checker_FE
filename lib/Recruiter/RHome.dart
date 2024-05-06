@@ -1,12 +1,13 @@
 import 'package:cv_checker/AppUtils/appColors.dart';
 import 'package:cv_checker/CommonUI/navBar.dart';
+import 'package:cv_checker/CommonUI/searchWidget.dart';
 import 'package:cv_checker/Recruiter/RSearch.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 
 class RHomeWidget extends StatefulWidget {
-  final Function() nextTap;
+  final Function(String? search) nextTap;
   const RHomeWidget({super.key,
   required this.nextTap
   });
@@ -28,6 +29,8 @@ class _RHomeWidgetState extends State<RHomeWidget> {
   void dispose() {
     super.dispose();
   }
+
+  TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -125,77 +128,15 @@ class _RHomeWidgetState extends State<RHomeWidget> {
                       alignment: const AlignmentDirectional(1, -1),
                       child: Padding(
                         padding: const EdgeInsetsDirectional.fromSTEB(30, 20, 0, 0),
-                        child: Container(
-                          width: 664,
-                          height: 90,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                16, 20, 16, 16),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: Align(
-                                    alignment: const AlignmentDirectional(0, 0),
-                                    child: Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          8, 0, 8, 0),
-                                      child: TextFormField(
-                                        key: const ValueKey('searchHome'),
-                                        autofocus: true,
-                                        obscureText: false,
-                                        decoration: InputDecoration(
-                                          labelStyle: GoogleFonts.getFont(
-                                            'Istok Web',
-                                            fontSize: 25,
-                                          ),
-                                          hintText: 'Search Job or Sector',
-                                          hintStyle: Theme.of(context)
-                                              .textTheme.bodyMedium!
-                                              .apply(
-                                              fontFamily: 'Istok Web',
-                                              color: AppColors.greylighten1
-                                          ),
-                                          enabledBorder: InputBorder.none,
-                                          focusedBorder: InputBorder.none,
-                                          errorBorder: InputBorder.none,
-                                          focusedErrorBorder:
-                                          InputBorder.none,
-                                          prefixIcon: const Icon(
-                                            Icons.search_sharp,
-                                          ),
-                                        ),
-                                        style: Theme.of(context)
-                                            .textTheme.bodyMedium!
-                                            .apply(
-                                          fontFamily: 'Istok Web',
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                MaterialButton(
-                                  color: AppColors.primaryColor,
-                                  onPressed: () {
-                                    print('Button pressed ...');
-                                    widget.nextTap();
-                                  },
-                                  child: Text('Search', style: TextStyle(
-                                      color: Colors.white
-                                  ),),
-                                  height: 40,
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      24, 0, 24, 0),
-                                  elevation: 3,
-                                ),
-                              ],
-                            ),
-                          ),
+                        child: Column(
+                          children: [
+                            SearchWidget(
+                              searchController: searchController,
+                              onSearch: (){
+                                widget.nextTap(searchController.text);
+                              },
+                            )
+                          ],
                         ),
                       ),
                     ),

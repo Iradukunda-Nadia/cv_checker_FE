@@ -1,4 +1,5 @@
 import 'package:cv_checker/AppUtils/appColors.dart';
+import 'package:cv_checker/Services/commonService.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
@@ -7,6 +8,7 @@ import 'package:intl/intl.dart';
 class CustomTF extends StatefulWidget {
   final String label;
   final String hint;
+  final String? initialText;
   final bool? isDate;
   final bool? isShort;
   final bool? isMultiline;
@@ -15,9 +17,11 @@ class CustomTF extends StatefulWidget {
   final TextInputType? type;
   final List<dynamic>? values;
   final TextEditingController controller;
+  final bool? isSearch;
   const CustomTF({Key? key,
     required this.label,
     required this.hint,
+    this.initialText,
     this.isDate,
     this.isShort,
     this.isMultiline,
@@ -25,6 +29,7 @@ class CustomTF extends StatefulWidget {
     this.showLabel,
     this.type,
     this.values,
+    this.isSearch,
     required this.controller
   }) : super(key: key);
 
@@ -35,19 +40,33 @@ class CustomTF extends StatefulWidget {
 class _CustomTFState extends State<CustomTF> {
 
   String _currentSelectedValue = ' ';
+  
 
   Future _selectDate() async {
     DateTime? picked = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(1900),
-        lastDate: DateTime(2025)
+        lastDate: DateTime.now(),
     );
     if(picked != null) {
-      var date = DateFormat('dd-MM-yyyy').format(picked);
+      var date = CommonService().dateShort(picked.toString());
       setState(() => widget.controller.text = date.toString());
       //returns the selected date and formats it to day- month- year format
     }
+  }
+  
+  @override
+  void initState() {
+    _currentSelectedValue = widget.values!= null? widget.values![1]:' ';
+    if(_currentSelectedValue != null &&
+        _currentSelectedValue != ' '){
+      widget.controller.text= _currentSelectedValue;
+    }
+    if(widget.initialText !=null){
+      widget.controller.text= widget.initialText!;
+    }
+    super.initState();
   }
 
 
@@ -58,14 +77,14 @@ class _CustomTFState extends State<CustomTF> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        /*widget.showLabel == false? const SizedBox(height: 2,): */Padding(
+        widget.isSearch == true?Offstage():Padding(
           padding: const EdgeInsets.only(top: 8.0, right: 8, bottom: 8),
           child: Container(
             constraints: const BoxConstraints(
                 minWidth: 100
             ),
             height: 20,
-            child: Text(
+            child:  Text(
               widget.label,
               style: GoogleFonts.getFont(
                 'Montserrat',
@@ -81,10 +100,13 @@ class _CustomTFState extends State<CustomTF> {
               minWidth: 100,
               maxWidth: widget.isShort == true ? 300:600
           ),
-          height: 60,
+          height: widget.isSearch == true?50:40,
           decoration: ShapeDecoration(
             shape: RoundedRectangleBorder(
-              side: BorderSide(
+              side: widget.isSearch == true? BorderSide(
+                width: 0,
+                color: Colors.white,
+              ):BorderSide(
                 width: 1,
                 color: Colors.black.withOpacity(0.25),
               ),
@@ -99,19 +121,18 @@ class _CustomTFState extends State<CustomTF> {
                   return InputDecorator(
                     baseStyle: GoogleFonts.getFont(
                       'Istok Web',
-                      fontSize: 25,
+                      fontSize: 18,
                     ),
                     decoration: InputDecoration(
                       labelStyle: GoogleFonts.getFont(
                         'Istok Web',
-                        fontSize: 25,
+                        fontSize: 18,
                       ),
                       hintText: widget.hint,
-                      hintStyle: Theme.of(context)
-                          .textTheme.bodyMedium!
-                          .apply(
-                          fontFamily: 'Istok Web',
-                          color: AppColors.greylighten1
+                      hintStyle: GoogleFonts.getFont(
+                        'Istok Web',
+                        fontSize: 18,
+                        color: AppColors.greylighten1
                       ),
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
@@ -131,12 +152,12 @@ class _CustomTFState extends State<CustomTF> {
                             state.didChange(newValue);
                           });
                         },
-                        items: widget.values!.map((val){
+                        items: widget.values!.where((element) => element != ' ').map((val){
                           return DropdownMenuItem<String>(
                             value: val,
                             child: Text(val, style: GoogleFonts.getFont(
                               'Istok Web',
-                              fontSize: 25,
+                              fontSize: 18,
                             ),),
                           );
                         }).toList(),
@@ -160,13 +181,12 @@ class _CustomTFState extends State<CustomTF> {
                 decoration: InputDecoration(
                   labelStyle: GoogleFonts.getFont(
                     'Istok Web',
-                    fontSize: 25,
+                    fontSize: 18,
                   ),
                   hintText: widget.hint,
-                  hintStyle: Theme.of(context)
-                      .textTheme.bodyMedium!
-                      .apply(
-                      fontFamily: 'Istok Web',
+                  hintStyle: GoogleFonts.getFont(
+                      'Istok Web',
+                      fontSize: 18,
                       color: AppColors.greylighten1
                   ),
                   enabledBorder: InputBorder.none,

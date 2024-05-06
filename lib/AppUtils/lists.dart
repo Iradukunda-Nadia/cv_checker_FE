@@ -2,9 +2,17 @@ import 'package:flutter/material.dart';
 
 class Lists{
 
+  static List<String> randomImages = [
+    "assets/images/avatar1.png",
+    "assets/images/avatar2.png",
+    "assets/images/avatar4.png",
+    "assets/images/avatar5.png",
+    "assets/images/avatar6.png",
+  ];
+
 static List categories = [
-  "Web Developer", "Android Developer", "IOS Developer", "Backend Developer",
-  "Front-End Developer"
+  "IT", "Healthcare", "Agriculture", "Media",
+  "Finance", "Education", "Manufacturing", "Retail"
 ];
 
 static List experience = [

@@ -1,9 +1,14 @@
 import 'package:cv_checker/AppUtils/appColors.dart';
+import 'package:cv_checker/Authentication/LoginSignup.dart';
 import 'package:cv_checker/Authentication/signin.dart';
 import 'package:cv_checker/CommonUI/formFields/CustomTF.dart';
+import 'package:cv_checker/Providers/userProvider.dart';
+import 'package:cv_checker/Services/commonService.dart';
+import 'package:cv_checker/Services/recruiterService.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class NewJob extends StatefulWidget {
   const NewJob({Key? key}) : super(key: key);
@@ -138,14 +143,11 @@ class _NewJobState extends State<NewJob> {
               itemBuilder: (context) => [
                 PopupMenuItem<String>(
                   onTap: (){
-                    print('logout');
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => Signin()),
-                            (Route<dynamic> route) => false);
+                    CommonService().logout;
                   },
                   value: "logout",
-                  child: const Row(
-                    children: [
+                  child: Row(
+                    children: const [
                       Icon(
                         Icons.logout,
                         color:Colors.black,
@@ -227,7 +229,7 @@ class _NewJobState extends State<NewJob> {
                         ),
                         CustomTF(
                           isDropDown: true,
-                          values: [" ","Entry-level","Mid-level","Expert"],
+                          values: const [" ","Entry-level","Mid-level","Expert"],
                           label: 'Experience Level Required',
                           hint: '',
                           controller: _experienceLevelController,
@@ -245,7 +247,7 @@ class _NewJobState extends State<NewJob> {
                         CustomTF(
                           label: 'Location',
                           hint: '',
-                          controller: _webLinkController,
+                          controller: _locationController,
                         ),
                         CustomTF(
                           label: 'Job description',
@@ -287,18 +289,41 @@ class _NewJobState extends State<NewJob> {
                                 print('Button pressed ...');
                                 //check if form is filled correctly
 
-                                /*if (form!.validate()) {
+                                if (form!.validate()) {
                                   var user = Provider.of<UserProvider>(context, listen: false);
-                                  //save personal info to the current state provider
-                                  user.setPersonalInfo(
-                                      {
-                                        "name": "${_firstNameController.text} ${_lastNameController.text}",
-                                        "phone": _phoneController.text,
-                                        "email": _emailController.text,
-                                        "dob": _dobController.text
-                                      }
-                                  );
-                                  widget.nextTap();
+                                  //create job posting map
+
+                                  var data = {
+                                    "title": _jobTitleController.text,
+                                    "specialSkill": _skillsController.text,
+                                    "websiteURL": _webLinkController.text,
+                                    "location": _locationController.text,
+                                    "description": _descriptionController.text,
+                                    "experience":
+                                    CommonService().experience
+                                      (_experienceLevelController.text),
+                                    "UserId": user.user.id,
+                                    "status": 0
+                                  };
+
+                                  //Sign up Recruiter
+                                  RecruiterService().postJob(data).then((result){
+                                    print(result);
+                                    if(result['status']) {
+                                      CommonService().showSnack(context,
+                                          "Job"
+                                          " posted successfully");
+                                      _formKey.currentState!.reset();
+                                      Navigator.of(context).pop();
+                                    }
+                                    else{
+                                      String err = "error: $result";
+
+                                      CommonService().showSnack(context, err);
+                                    }
+
+                                  });
+
                                 }
                                 else {
                                   print("form is invalid");
@@ -308,7 +333,7 @@ class _NewJobState extends State<NewJob> {
                                           content:
                                           Text( "Please fill all thedetails")
                                       ));
-                                }*/
+                                }
 
                               },
                               height: 40,

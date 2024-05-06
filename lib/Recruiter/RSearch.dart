@@ -1,14 +1,20 @@
 import 'package:cv_checker/AppUtils/appColors.dart';
 import 'package:cv_checker/AppUtils/lists.dart';
 import 'package:cv_checker/CommonUI/candidateCard.dart';
+import 'package:cv_checker/CommonUI/fetchingLoader.dart';
 import 'package:cv_checker/CommonUI/navBar.dart';
+import 'package:cv_checker/CommonUI/searchWidget.dart';
+import 'package:cv_checker/Services/recruiterService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
 class RSearch extends StatefulWidget {
-  const RSearch({Key? key}) : super(key: key);
+  final int? selectedSector;
+  const RSearch({Key? key,
+  this.selectedSector
+  }) : super(key: key);
 
   @override
   State<RSearch> createState() => _RSearchState();
@@ -24,6 +30,14 @@ class _RSearchState extends State<RSearch> {
   @override
   void initState() {
     setValues();
+
+
+
+    if(widget.selectedSector != null){
+      int val = Lists.categories.indexOf(widget.selectedSector);
+      jobSectorFilter.add(val);
+    }
+    _getCandidates = refreshSearch();
     super.initState();
   }
 
@@ -41,24 +55,50 @@ class _RSearchState extends State<RSearch> {
     });
   }
 
+  TextEditingController searchController = TextEditingController();
+
+  List <int> jobSectorFilter= [0];
+  List <int> experienceLevelFilter = [0];
+  List <int> educationLevelFilter = [0];
+
+  List candidates = [];
+
+  late Future _getCandidates;
+
+  refreshSearch() async {
+   RecruiterService().getJobSeekers(
+        {
+          "jobSectorFilter": jobSectorFilter,
+          "experienceLevelFilter": educationLevelFilter,
+          "educationLevelFilter": educationLevelFilter,
+        }
+    ).then((result){
+      if (result['status']){
+        setState(() {
+          candidates = result['message']['data']["jobSeekers"];
+          print(candidates);
+        });
+      }
+   });
+
+   return candidates;
+  }
+
+
   @override
   void dispose() {
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverOverlapInjector(
-          // This is the flip side of the SliverOverlapAbsorber above.
-          handle:
-          NestedScrollView.sliverOverlapAbsorberHandleFor(
-              context),
-        ),
         SliverToBoxAdapter(
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
                 width: 1406,
@@ -67,77 +107,12 @@ class _RSearchState extends State<RSearch> {
                   alignment: AlignmentDirectional(0, 1),
                   child: Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(30, 20, 0, 20),
-                    child: Container(
-                      width: 664,
-                      height: 90,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(
-                            16, 20, 16, 16),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Align(
-                                alignment: const AlignmentDirectional(0, 0),
-                                child: Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      8, 0, 8, 0),
-                                  child: TextFormField(
-                                    key: const ValueKey('searchHome'),
-                                    autofocus: true,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      labelStyle: GoogleFonts.getFont(
-                                        'Istok Web',
-                                        fontSize: 25,
-                                      ),
-                                      hintText: 'Search Job or Sector',
-                                      hintStyle: Theme.of(context)
-                                          .textTheme.bodyMedium!
-                                          .apply(
-                                          fontFamily: 'Istok Web',
-                                          color: AppColors.greylighten1
-                                      ),
-                                      enabledBorder: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      errorBorder: InputBorder.none,
-                                      focusedErrorBorder:
-                                      InputBorder.none,
-                                      prefixIcon: const Icon(
-                                        Icons.search_sharp,
-                                      ),
-                                    ),
-                                    style: Theme.of(context)
-                                        .textTheme.bodyMedium!
-                                        .apply(
-                                      fontFamily: 'Istok Web',
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            MaterialButton(
-                              color: AppColors.primaryColor,
-                              onPressed: () {
-                                print('Button pressed ...');
-                              },
-                              child: Text('Search', style: TextStyle(
-                                  color: Colors.white
-                              ),),
-                              height: 40,
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  24, 0, 24, 0),
-                              elevation: 3,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    child: SearchWidget(
+                      searchController: searchController,
+                      onSearch: (){
+                        refreshSearch();
+                      },
+                    )
                   ),
                 ),
               ),
@@ -150,6 +125,7 @@ class _RSearchState extends State<RSearch> {
                     padding: const EdgeInsets.all(20.0),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           flex: 1,
@@ -194,11 +170,27 @@ class _RSearchState extends State<RSearch> {
                                             return CheckboxListTile(
                                               title: Text(key, style: Theme.of
                                                 (context).textTheme.bodySmall,),
-                                              value: categories[key],
+                                              value: jobSectorFilter
+                                                  .contains(Lists.categories
+                                                      .indexOf(key))? true:
+                                              false,
                                               onChanged: (bool? value) {
                                                 setState(() {
-                                                  categories[key] = value?? false;
+
+                                                  if( jobSectorFilter
+                                                      .contains(Lists.categories
+                                                      .indexOf(key))){
+                                                    jobSectorFilter.
+                                                    removeWhere((e) => e== Lists.categories
+                                                        .indexOf(key));
+
+                                                  }
+                                                  else{
+                                                    jobSectorFilter.add(Lists.categories
+                                                        .indexOf(key));
+                                                  }
                                                 });
+                                                refreshSearch();
                                               },
                                             );
                                           }).toList(),
@@ -214,11 +206,28 @@ class _RSearchState extends State<RSearch> {
                                             return CheckboxListTile(
                                               title: Text(key, style: Theme.of
                                                 (context).textTheme.bodySmall,),
-                                              value: experience[key],
+                                              value: experienceLevelFilter
+                                                  .contains(Lists.experience
+                                                  .indexOf(key))? true:
+                                              false,
                                               onChanged: (bool? value) {
                                                 setState(() {
-                                                  experience[key] = value?? false;
+                                                  if( experienceLevelFilter
+                                                      .contains(Lists.experience
+                                                      .indexOf(key))){
+                                                    experienceLevelFilter.
+                                                    removeWhere((e) => e==
+                                                        Lists.experience
+                                                        .indexOf(key));
+
+                                                  }
+                                                  else{
+                                                    experienceLevelFilter.add
+                                                      (Lists.experience
+                                                        .indexOf(key));
+                                                  }
                                                 });
+                                                refreshSearch();
                                               },
                                             );
                                           }).toList(),
@@ -234,11 +243,28 @@ class _RSearchState extends State<RSearch> {
                                             return CheckboxListTile(
                                               title: Text(key, style: Theme.of
                                                 (context).textTheme.bodySmall,),
-                                              value: education[key],
+                                              value: educationLevelFilter
+                                                  .contains(Lists.education
+                                                  .indexOf(key))? true:
+                                              false,
                                               onChanged: (bool? value) {
                                                 setState(() {
-                                                  education[key] = value?? false;
+                                                  if( educationLevelFilter
+                                                      .contains(Lists.education
+                                                      .indexOf(key))){
+                                                    educationLevelFilter.
+                                                    removeWhere((e) => e==
+                                                        Lists.education
+                                                            .indexOf(key));
+
+                                                  }
+                                                  else{
+                                                    educationLevelFilter.add
+                                                      (Lists.education
+                                                        .indexOf(key));
+                                                  }
                                                 });
+                                                refreshSearch();
                                               },
                                             );
                                           }).toList(),
@@ -254,43 +280,79 @@ class _RSearchState extends State<RSearch> {
                         ),
                         Expanded(
                           flex: 2,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(vertical: 20.0),
-                                child: Text("${Lists.candidates.length.toString()} "
-                                    "Candidates", style: Theme
-                                    .of(context)
-                                    .textTheme.titleMedium,),
-                              ),
+                          child: FutureBuilder(
+                              future: _getCandidates,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState != ConnectionState.done) {
+                                  return const FetchingLoader();
+                                }
+                                else if (snapshot.hasData){
+                                  return Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 20.0),
+                                        child: Text(
+                                          "${candidates.length.toString()} "
+                                          "Candidates",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ),
+                                      ),
+                                      Flexible(
+                                        fit: FlexFit.loose,
+                                        child: ListView.builder(
+                                            shrinkWrap: true,
+                                            padding: const EdgeInsets.all(10),
+                                            itemCount: candidates.length,
+                                            reverse: false,
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            itemBuilder: (context, index) {
+                                              var candidate = candidates[index];
 
-                              Flexible(
-                                fit: FlexFit.loose,
-                                child: ListView.builder(
-                                    shrinkWrap: true,
-                                    padding: const EdgeInsets.all(10),
-                                    itemCount: Lists.candidates.length,
-                                    reverse: false,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
-
-                                      var candidate =
-                                      Lists.candidates[index];
-
-                                      return CandidateCard(
-                                        id: candidate['id'],
-                                        email: candidate['email'],
-                                        image: candidate['image'],
-                                        name: candidate['name'],
-                                        item: candidate,
-                                      );
-                                      //}
-                                    }),
-                              ),
-                            ],
+                                              return CandidateCard(
+                                                  id: candidate["id"].toString(),
+                                                  email: candidate['email'],
+                                                  image: candidate['image'],
+                                                  jobSeekerName: candidate[
+                                                      'jobSeekerName']??'Anon'
+                                                      'ymous',
+                                                  item: candidate,
+                                                  createdDate:
+                                                      candidate['createdDate'],
+                                                  modifiedDate:
+                                                      candidate['modifiedDate'],
+                                                  jobSector:
+                                                      candidate['jobSector'] ??
+                                                          0,
+                                                  jobSectorLabel: candidate[
+                                                      'jobSectorLabel'],
+                                                  educationLevel: candidate[
+                                                          'educationLevel'] ??
+                                                      0,
+                                                  educationLevelLabel: candidate[
+                                                      'educationLevelLabel'],
+                                                  experienceLevel: candidate[
+                                                          'experienceLevel'] ??
+                                                      0,
+                                                experienceLevelLabel: candidate[
+                                                'experienceLevelLabel'] ?? '',);
+                                              //}
+                                            }),
+                                      ),
+                                    ],
+                                  );
+                                }
+                                else {
+                                  return const FetchingLoader();
+                                }
+                              }
                           ),
                         ),
                       ],

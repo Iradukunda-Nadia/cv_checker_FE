@@ -17,3 +17,10 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 
+Requires the following software
+
+Flutter
+Dart
+
+to run the web application:
+ -flutter run -d chrome --web-browser-flag "--disable-web-security"
