@@ -1,14 +1,9 @@
-mport 'dart:convert';
 import 'dart:convert';
-
-import 'package:cv_checker/Services/apiService.dart';
 import 'package:cv_checker/Services/appURLS.dart';
-import 'package:cv_checker/Services/jobSeekerService.dart';
 import 'package:cv_checker/Services/recruiterService.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:mockito/mockito.dart';
 
 void main() {
   group('JobSeekerService', () {
@@ -17,7 +12,7 @@ void main() {
 
     setUp(() {
       httpClient = MockClient((request) async {
-        if (request.url.path == AppUrl.jobSeekerLogin) {
+        if (request.url.path == AppUrl.recruiterLogin) {
           return http.Response(json.encode({'message': 'Successful'}), 200);
         }
         return http.Response('Not Found', 404);

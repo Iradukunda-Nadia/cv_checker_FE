@@ -107,6 +107,7 @@ class _JSHomeState extends State<JSHome> {
                               )),
                           Row(
                             mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Expanded(
                                 flex: 1,

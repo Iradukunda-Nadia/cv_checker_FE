@@ -54,7 +54,7 @@ class _CurrentCVState extends State<CurrentCV> {
                     style: GoogleFonts.getFont(
                       'Montserrat',
                       color: Colors.black,
-                      fontSize: 14,
+                      fontSize: 20,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -145,7 +145,7 @@ class _CurrentCVState extends State<CurrentCV> {
                         width: 429,
                         height: 25,
                         child: Text(
-                          'Experience ',
+                          'Work Experience ',
                           style: GoogleFonts.getFont(
                             'Montserrat',
                             color: Colors.black,

@@ -262,8 +262,7 @@ class _EducationState extends State<Education> {
                       ],
                     ),
                   ),
-                  Expanded(
-                      flex: 1,child: CurrentCV())
+                  Expanded(flex: 1,child: CurrentCV())
                 ],
               ),
             ),

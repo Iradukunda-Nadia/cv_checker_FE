@@ -2,10 +2,12 @@ import 'package:cv_checker/AppUtils/appColors.dart';
 import 'package:cv_checker/Authentication/LoginSignup.dart';
 import 'package:cv_checker/Authentication/signin.dart';
 import 'package:cv_checker/JobSeeker/education.dart';
+import 'package:cv_checker/JobSeeker/pdfPageCV.dart';
 import 'package:cv_checker/JobSeeker/personalInfo.dart';
 import 'package:cv_checker/JobSeeker/skills.dart';
 import 'package:cv_checker/JobSeeker/workExperience.dart';
 import 'package:cv_checker/Services/commonService.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -118,64 +120,25 @@ class _cvFormState extends State<cvForm> with
           progressButton(2, 'Work Experience'),
           progressButton(3, 'Education'),
           Padding(
-            padding: const EdgeInsets.only(left: 100),
-            child: PopupMenuButton(
-              offset: Offset(12, 80),
+            padding: const EdgeInsets.only(left: 50, right: 16),
+            child: InkWell(
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const CvPDF()));
+              },
               child: Container(
-                width: 176,
                 height: 53,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Container(
-                        width: 70,
-                        height: 70,
-                        clipBehavior: Clip.antiAlias,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                        ),
-                        child: Image.network(
-                          'https://picsum.photos/seed/536/600',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      color: AppColors.textColor,
-                      size: 24,
-                    ),
-                  ],
+                color: AppColors.accent2Color,
+                constraints: const BoxConstraints(
+                  minWidth: 100,
+                ),
+                child: Center(
+                  child: Text("View as PDF", style: TextStyle(
+                    fontSize: 20,
+                    color: AppColors.primaryLighten,
+                  ),),
                 ),
               ),
-              onSelected: (String value) {},
-              itemBuilder: (context) => [
-                PopupMenuItem<String>(
-                  onTap: (){
-                    print('logout');
-                    CommonService().logout(context);
-                  },
-                  value: "logout",
-                  child: Row(
-                    children: const [
-                      Icon(
-                        Icons.logout,
-                        color:Colors.black,
-                        size: 25,
-                      ),
-                      SizedBox(width: 5),
-                      Flexible(
-                        child: Text(
-                          "Logout",
-                          style: TextStyle(color: Colors.black, fontSize: 20),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
             ),
           ),
         ],

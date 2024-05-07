@@ -19,6 +19,14 @@ class UserProvider with ChangeNotifier {
   List<Job> jobResults = [];
   bool fetchingJobs = false;
 
+  bool showPDF = false;
+
+
+  void setPDF(bool show) {
+    showPDF = show;
+    notifyListeners();
+  }
+
   void setUser(userData) {
     _user.role = userData["role"];
     _user.fullName = userData["fullName"];
@@ -28,7 +36,7 @@ class UserProvider with ChangeNotifier {
   }
 
   void cleartUser() {
-    _user= User();
+    _cv = CV.fromJson({});
   }
 
 
