@@ -23,7 +23,7 @@ void main() {
     });
 
     test('login returns successful result when status code is 200', () async {
-      final data = {'email': 'j5@gmail.com', 'password': 'Test@123'};
+      final data = {'email': 'j5@gmail.com', 'password': 'Test@123'};
       final result = await jobSeekerService.login(data);
       expect(result, {'status': true, 'data': result['message']??
           result['data']});
